@@ -22,6 +22,15 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&display=swap"
         rel="stylesheet">
 
+    <!-- SEO & Social Media -->
+    <link rel="canonical" href="https://denisviddal.com.br/rescisao-indireta/">
+    <meta property="og:title" content="Rescisão Indireta | Método Rescisão Segura">
+    <meta property="og:description"
+        content="Saia de um ambiente tóxico sem perder seus direitos. Garanta FGTS e seguro-desemprego.">
+    <meta property="og:url" content="https://denisviddal.com.br/rescisao-indireta/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
     <!-- AOS Styles -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
@@ -358,7 +367,8 @@
 
                 [...text].forEach((char, i) => {
                     const span = document.createElement('span');
-                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    // Usar espaço normal para permitir quebra de linha natural do navegador
+                    span.textContent = char;
                     span.style.transitionDelay = `${i * 0.02}s`;
                     el.appendChild(span);
                 });
