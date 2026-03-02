@@ -11,10 +11,16 @@
 [images]
   remote_images = ["https://.*"]
 
+# Redirecionamento para manter o link de reserva funcional
+[[redirects]]
+  from = "/rescisao-indireta/*"
+  to = "/:splat"
+  status = 200
+
 # Redirect www → apex
 [[redirects]]
-  from = "https://www.example.com/*"
-  to = "https://example.com/:splat"
+  from = "https://www.denisviddal.com.br/*"
+  to = "https://denisviddal.com.br/:splat"
   status = 301
   force = true
 
