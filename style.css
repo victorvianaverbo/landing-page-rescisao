@@ -71,32 +71,50 @@ h3 {
 }
 
 .btn-primary {
-    display: inline-block;
-    background: var(--glass-gold);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    color: #1A1A1A;
-    /* Black/Dark text */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, #D4AF37 50%, var(--accent-gold) 100%);
+    background-size: 200% auto;
+    color: var(--white);
     padding: 1.2rem 2.8rem;
-    border-radius: 14px;
-    /* Slightly more rounded */
+    border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
     font-family: var(--font-body);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: var(--transition);
-    border: 2px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    letter-spacing: 1.5px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    box-shadow: 0 10px 20px rgba(184, 134, 11, 0.2), inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: skewX(-25deg);
+    transition: all 0.7s ease;
+    z-index: -1;
 }
 
 .btn-primary:hover {
-    background: var(--accent-gold);
     color: var(--white);
-    /* White text on hover gold */
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(184, 134, 11, 0.3);
-    border-color: var(--accent-gold);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(184, 134, 11, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+    background-position: right center;
+}
+
+.btn-primary:hover::before {
+    left: 200%;
 }
 
 /* Glassmorphism Card */
@@ -259,20 +277,7 @@ h3 {
     color: var(--white);
 }
 
-/* Text Reveal Classes */
-.js-reveal span {
-    opacity: 0;
-    display: inline-block;
-    filter: blur(5px);
-    transform: translateY(10px);
-    transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
-}
-
-.js-reveal.active span {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateY(0);
-}
+/* Text Reveal Classes (removido para usar AOS em favor da legibilidade) */
 
 .mechanism-visual {
     display: flex;

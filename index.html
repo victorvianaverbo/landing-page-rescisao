@@ -134,7 +134,7 @@
                         tudo. Mas a lei protege o bom profissional. Quando a empresa descumpre o contrato, você tem o
                         direito de "demitir" a empresa.
                     </p>
-                    <p class="mechanism-highlight js-reveal">
+                    <p class="mechanism-highlight" data-aos="fade-up">
                         O Tribunal Superior do Trabalho já pacificou o entendimento: a ausência de recolhimento do FGTS,
                         por si só, configura falta grave do empregador, autorizando a rescisão indireta do contrato de
                         trabalho. Isso significa que você pode se desligar da empresa com a garantia de todos os seus
@@ -359,29 +359,7 @@
                 disableMutationObserver: true // Previne CLS conforme regra
             });
 
-            const revealElements = document.querySelectorAll('.js-reveal');
-
-            revealElements.forEach(el => {
-                const text = el.textContent.trim();
-                el.innerHTML = '';
-
-                [...text].forEach((char, i) => {
-                    const span = document.createElement('span');
-                    // Usar espaço normal para permitir quebra de linha natural do navegador
-                    span.textContent = char;
-                    span.style.transitionDelay = `${i * 0.02}s`;
-                    el.appendChild(span);
-                });
-
-                const observer = new IntersectionObserver((entries) => {
-                    if (entries[0].isIntersecting) {
-                        el.classList.add('active');
-                        observer.unobserve(el);
-                    }
-                }, { threshold: 0.2 });
-
-                observer.observe(el);
-            });
+            // Text Reveal Implementation (removido para evitar quebra de espaços)
 
             // Lazy Load GSAP for Architecture Progress
             function lazyLoadModule(selector, loadFn) {
@@ -485,13 +463,34 @@
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
                 });
 
-                // Prevenir envio se for inválido (opcional, ajustável via skill forms)
+                // Netlify Forms AJAX Submit & Redirect to WhatsApp
                 const form = document.querySelector("#leadForm");
                 form.addEventListener("submit", (e) => {
+                    e.preventDefault(); // Impedir o reload padrão
+
                     if (!iti.isValidNumber()) {
-                        e.preventDefault();
                         alert("Por favor, insira um número de telefone válido.");
+                        return;
                     }
+
+                    const formData = new FormData(form);
+
+                    fetch("/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams(formData).toString()
+                    })
+                        .then(() => {
+                            const nomeNome = formData.get("name") || "Lead";
+                            const nomeEncoded = encodeURIComponent(nomeNome);
+                            const texto = `Olá! Meu nome é ${nomeEncoded}. Acabei de preencher o formulário no site e gostaria de saber se meu caso se enquadra na Rescisão Indireta.`;
+
+                            window.location.href = `https://wa.me/5531989884751?text=${texto}`;
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            alert("Houve um erro no envio. Tente novamente ou chame diretamente no WhatsApp.");
+                        });
                 });
             }
         });
