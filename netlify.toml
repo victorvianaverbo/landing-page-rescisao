@@ -11,19 +11,7 @@
 [images]
   remote_images = ["https://.*"]
 
-# Redirecionamento para manter o link de reserva funcional
-[[redirects]]
-  from = "/rescisao-indireta/*"
-  to = "/:splat"
-  status = 200
-
-# Redirect www → apex
-[[redirects]]
-  from = "https://www.denisviddal.com.br/*"
-  to = "https://denisviddal.com.br/:splat"
-  status = 301
-  force = true
-
+# Redirecionamentos movidos para o arquivo _redirects
 # Headers de seguranca
 [[headers]]
   for = "/*"
