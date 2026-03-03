@@ -135,9 +135,11 @@
                         direito de "demitir" a empresa.
                     </p>
                     <p class="mechanism-highlight" data-aos="fade-up">
-                        O TST (Tribunal Superior do Trabalho) já consolidou: a falta de recolhimento de FGTS, por si só,
-                        é motivo suficiente para você sair IMEDIATAMENTE com todos os seus direitos garantidos. Saia de
-                        cabeça erguida, com o bolso cheio e sua reputação intacta.
+                        O Tribunal Superior do Trabalho já pacificou o entendimento: a ausência de recolhimento do FGTS,
+                        por si só, configura falta grave do empregador, autorizando a rescisão indireta do contrato de
+                        trabalho. Isso significa que você pode se desligar da empresa com a garantia de todos os seus
+                        direitos, como se fosse uma demissão sem justa causa, preservando sua dignidade e reputação
+                        profissional.
                     </p>
                 </div>
                 <div class="mechanism-visual" data-aos="zoom-in" data-aos-delay="200">
@@ -298,22 +300,29 @@
                     <p class="footer-subtitle">Preencha o formulário para uma avaliação sigilosa.</p>
                 </header>
 
-                <form name="contato-rescisao" method="POST" data-netlify="true" class="footer-form" id="leadForm">
+                <form name="contato-rescisao" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form
+                    class="footer-form" id="leadForm">
+                    <input type="hidden" name="form-name" value="contato-rescisao">
+                    <p hidden><label>Nao preencha: <input name="bot-field"></label></p>
+
                     <div class="form-group">
-                        <label for="name">Nome Completo</label>
-                        <input type="text" id="name" name="name" placeholder="Seu nome aqui" required>
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" placeholder="Seu nome aqui" required
+                            autocomplete="name">
                     </div>
 
                     <div class="form-group">
                         <label for="email">E-mail Corporativo ou Pessoal</label>
-                        <input type="email" id="email" name="email" placeholder="email@exemplo.com" required>
+                        <input type="email" id="email" name="email" placeholder="email@exemplo.com" required
+                            autocomplete="email">
                     </div>
 
                     <div class="form-group">
-                        <label for="phone">Telefone / WhatsApp</label>
-                        <input type="tel" id="phone" name="phone" required>
+                        <label for="telefone">Telefone / WhatsApp</label>
+                        <input type="tel" id="telefone" name="telefone" required autocomplete="tel">
                     </div>
 
+                    <div class="form-feedback"></div>
                     <button type="submit" class="btn-primary btn-full js-btn-pulse">
                         ENVIAR AVALIAÇÃO AGORA
                         <i class="ph-bold ph-arrow-right"></i>
@@ -347,17 +356,16 @@
     <!-- AOS Script -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
     <script>
-        // Text Reveal Implementation
         document.addEventListener('DOMContentLoaded', () => {
-            // AOS Init inside DOMContentLoaded because of 'defer' attribute
-            AOS.init({
-                duration: 800,
-                offset: 100,
-                once: true,
-                disableMutationObserver: true // Previne CLS conforme regra
-            });
-
-            // Text Reveal Implementation (removido para evitar quebra de espaços)
+            // AOS Init
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    offset: 100,
+                    once: true,
+                    disableMutationObserver: true
+                });
+            }
 
             // Lazy Load GSAP for Architecture Progress
             function lazyLoadModule(selector, loadFn) {
@@ -409,7 +417,7 @@
                 }
             });
 
-            // Counter Animation Implementation
+            // Counter Animation
             const counters = document.querySelectorAll('.js-counter');
             const counterObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -431,64 +439,79 @@
                     }
                 });
             }, { threshold: 0.5 });
-
             counters.forEach(counter => counterObserver.observe(counter));
 
-            // FAQ Accordion Implementation
+            // FAQ Accordion
             const faqQuestions = document.querySelectorAll('.faq-question');
             faqQuestions.forEach(q => {
                 q.addEventListener('click', () => {
                     const item = q.parentElement;
                     const isActive = item.classList.contains('active');
-
-                    // Close other items
                     document.querySelectorAll('.faq-item').forEach(other => {
                         other.classList.remove('active');
                     });
-
                     if (!isActive) {
                         item.classList.add('active');
                     }
                 });
             });
 
-            // intl-tel-input Implementation
-            const phoneInput = document.querySelector("#phone");
-            if (phoneInput) {
+            // intl-tel-input + Form Submit + WhatsApp Redirect
+            const phoneInput = document.querySelector("#telefone");
+            if (phoneInput && typeof intlTelInput !== 'undefined') {
                 const iti = window.intlTelInput(phoneInput, {
                     initialCountry: "br",
                     separateDialCode: true,
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
                 });
 
-                // Netlify Forms AJAX Submit & Redirect to WhatsApp
                 const form = document.querySelector("#leadForm");
-                form.addEventListener("submit", (e) => {
-                    e.preventDefault(); // Impedir o reload padrão
+                const feedback = form.querySelector('.form-feedback');
+                const btn = form.querySelector('[type="submit"]');
 
+                form.addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    // Validar telefone
                     if (!iti.isValidNumber()) {
-                        alert("Por favor, insira um número de telefone válido.");
+                        if (feedback) {
+                            feedback.className = 'form-feedback error';
+                            feedback.textContent = 'Por favor, insira um número de telefone válido.';
+                        }
                         return;
                     }
 
-                    const formData = new FormData(form);
+                    // Capturar dados antes do envio
+                    const nome = form.querySelector('[name="nome"]').value || 'Lead';
+                    const email = form.querySelector('[name="email"]').value || '';
 
+                    // Validar campos obrigatórios
+                    if (!nome.trim() || !email.trim()) {
+                        if (feedback) {
+                            feedback.className = 'form-feedback error';
+                            feedback.textContent = 'Preencha todos os campos corretamente.';
+                        }
+                        return;
+                    }
+
+                    // Setar telefone internacional
+                    phoneInput.value = iti.getNumber();
+
+                    const formData = new FormData(form);
+                    btn.disabled = true;
+                    btn.textContent = 'Enviando...';
+
+                    // Enviar para Netlify Forms em background (fire-and-forget)
                     fetch("/", {
                         method: "POST",
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
                         body: new URLSearchParams(formData).toString()
-                    })
-                        .then(() => {
-                            const nomeNome = formData.get("name") || "Lead";
-                            const nomeEncoded = encodeURIComponent(nomeNome);
-                            const texto = `Olá! Meu nome é ${nomeEncoded}. Acabei de preencher o formulário no site e gostaria de saber se meu caso se enquadra na Rescisão Indireta.`;
+                    }).catch(() => { }); // Silencia erros (local dev nao processa forms)
 
-                            window.location.href = `https://wa.me/5531989884751?text=${texto}`;
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                            alert("Houve um erro no envio. Tente novamente ou chame diretamente no WhatsApp.");
-                        });
+                    // Redirect para WhatsApp imediatamente
+                    const nomeEncoded = encodeURIComponent(nome);
+                    const texto = `Olá! Meu nome é ${nomeEncoded}. Acabei de preencher o formulário no site e gostaria de saber se meu caso se enquadra na Rescisão Indireta.`;
+                    window.location.href = `https://wa.me/5531989884751?text=${texto}`;
                 });
             }
         });
