@@ -36,7 +36,7 @@
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
@@ -542,18 +542,22 @@
                         fbq('track', 'Lead');
                     }
                     if (typeof gtag === 'function') {
-                        // Event snippet for Rescisão Indireta conversion page
+                        // Event snippet for Lead Whatsapp conversion page
                         gtag('event', 'conversion', {
-                            'send_to': 'AW-17983027274/ad61CJS1iIIcEMrw_P5C',
+                            'send_to': 'AW-17983027274/vpyACJuTua8cEMrw_P5C',
                             'value': 1.0,
                             'currency': 'BRL'
                         });
                     }
 
-                    // Redirect para WhatsApp imediatamente
+                    // Redirect para WhatsApp
                     const nomeEncoded = encodeURIComponent(nome);
                     const texto = `Olá! Meu nome é ${nomeEncoded}. Acabei de preencher o formulário no site e gostaria de saber se meu caso se enquadra na Rescisão Indireta.`;
-                    window.location.href = `https://wa.me/5531989884751?text=${texto}`;
+
+                    // Aguardar 800ms antes do redirect para garantir que o tracking seja disparado
+                    setTimeout(() => {
+                        window.location.href = `https://wa.me/5531989884751?text=${texto}`;
+                    }, 800);
                 });
             }
         });
